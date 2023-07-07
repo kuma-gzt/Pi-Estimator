@@ -1,10 +1,12 @@
 public class Window : Gtk.ApplicationWindow {
-    private Gtk.ComboBoxText comboboxtext;
+    private Gtk.ComboBoxText combo_box;
     private Gtk.Grid grid;
 	private Gtk.SpinButton spin;
 	private Gtk.Label numpoints_lbl;
-    private Gtk.Label pi_lbl;
-    private Gtk.Label epi_lbl;
+    private Gtk.Label pi_lbl_0;
+    private Gtk.Label pi_lbl_1;
+    private Gtk.Label epi_lbl_0;
+    private Gtk.Label epi_lbl_1;
 	private Gtk.Button buttonDraw;
 	private Gtk.Button buttonAbout;
 	private Gtk.Separator separator;
@@ -20,24 +22,22 @@ public class Window : Gtk.ApplicationWindow {
 		grid.set_row_spacing(10);
         this.add(grid);
 
-		comboboxtext = new Gtk.ComboBoxText();
-		comboboxtext.append_text("Uniform");
-        comboboxtext.append_text("Normal");
-        comboboxtext.set_active(0);
-        comboboxtext.show();
+		combo_box = new Gtk.ComboBoxText();
+		combo_box.append_text("Uniform");
+        combo_box.append_text("Normal");
+        combo_box.set_active(0);
+        combo_box.show();
         //comboboxtext.changed.connect(on_comboboxtext_changed);
-        grid.attach(comboboxtext, 0, 0, 1, 1);
+        grid.attach(combo_box, 0, 0, 1, 1);
 
 		numpoints_lbl = new Gtk.Label("Number points:");
 		grid.attach(numpoints_lbl, 1, 0, 1, 1);
 		numpoints_lbl.show();
 
-		spin = new Gtk.SpinButton.with_range(1, 10000, 1000);
-        spin.set_value(1000);
+		spin = new Gtk.SpinButton.with_range(1000, 100000, 10000);
+        spin.set_value(10000);
 		grid.attach(spin, 2, 0, 1, 1);
 		spin.show();
-
-        var draw_pi = new DrawPi(480, 480, 20, 10);
 
         buttonDraw = new Gtk.Button();
 		buttonDraw.set_label("Calculate");
@@ -58,18 +58,30 @@ public class Window : Gtk.ApplicationWindow {
         drawing_area = new Gtk.DrawingArea();
 		drawing_area.set_size_request(480, 480);
 		drawing_area.draw.connect((context) => {
-            return draw_pi.draw_shapes(context);
+            return Utils.draw_shapes(context, 480, 20);
 		});
 		grid.attach(drawing_area, 0, 2, 5, 1);
 		drawing_area.show();
 
-        pi_lbl = new Gtk.Label("Pi (first eight decimals): 3.14159265"); //3.1415926535897932384
-		grid.attach(pi_lbl, 0, 3, 5, 1);
-		pi_lbl.show();
+        pi_lbl_0 = new Gtk.Label("Pi: 3.1415926536"); //3.1415926535897932384
+        pi_lbl_0.set_xalign(1.0f);
+		grid.attach(pi_lbl_0, 1, 3, 2, 1);
+		pi_lbl_0.show();
 
-        epi_lbl = new Gtk.Label("Pi (estimated):"); //3.1415926535897932384
-		grid.attach(epi_lbl, 0, 4, 5, 1);
-		epi_lbl.show();
+        pi_lbl_1 = new Gtk.Label("(first ten decimals)"); //3.1415926535897932384
+        pi_lbl_0.set_xalign(0.0f);
+		grid.attach(pi_lbl_1, 2, 3, 2, 1);
+		pi_lbl_1.show();
+
+        epi_lbl_0 = new Gtk.Label(""); //3.1415926535897932384
+        epi_lbl_0.set_xalign(1.0f);
+		grid.attach(epi_lbl_0, 1, 4, 2, 1);
+		epi_lbl_0.show();
+
+        epi_lbl_1 = new Gtk.Label(""); //3.1415926535897932384
+        epi_lbl_0.set_xalign(0.0f);
+		grid.attach(epi_lbl_1, 2, 4, 2, 1);
+		epi_lbl_1.show();
 
         separator = new Gtk.Separator(Gtk.Orientation.HORIZONTAL);
         grid.attach(separator, 0, 5, 5, 1);
@@ -84,14 +96,13 @@ public class Window : Gtk.ApplicationWindow {
 
 
 	private void on_buttondraw_click() {
-        //var draw_pi = new DrawPi(480, 480, 20, 10000);
-
         drawing_area = new Gtk.DrawingArea();
 		drawing_area.set_size_request(480, 480);
 		drawing_area.draw.connect((context) => {
-            double pi = DrawPi.draw_points(context, 480, 20, 10000);
-            stdout.printf("pi: " + pi.to_string() + "\n");
-            epi_lbl.set_label(@"Pi (estimated): $pi");
+            int num_points = spin.get_value_as_int();
+            double pi = Utils.draw_points(context, 480, 20, num_points);
+            epi_lbl_0.set_label(@"Pi: $pi");
+            epi_lbl_1.set_label("(estimated)");
             return true;
 		});
 		grid.attach(drawing_area, 0, 2, 5, 1);
