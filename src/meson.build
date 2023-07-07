@@ -1,5 +1,7 @@
 piestimator_sources = [
-  'main.vala',
+  'Driver.vala',
+  'Window.vala',
+  'Utils.vala'
 ]
 
 piestimator_deps = [
