@@ -7,18 +7,14 @@
 public class Utils : GLib.Object {
     // Attributes
     public static int width_da;
-    public static int height_da;
     public static int pad;
     public static int num_points;
 
     // Constructor
-    public DrawPi(int width_da, int height_da, int pad, int num_points) {
-    //public DrawPi(int width_da, int height_da, int pad) {
-        this.width_da = width_da;
-        this.height_da = height_da;
-        this.pad = pad;
-        this.num_points = num_points;
+    public Utils() {
+
     }
+
     // Methods
 
     /**
@@ -28,19 +24,16 @@ public class Utils : GLib.Object {
      * @author Leo Guzman
      * @version 1.0
      */
-    public bool draw_shapes(Cairo.Context context) {
+    public static bool draw_shapes(Cairo.Context context, int width_da, int pad) {
         int center = (width_da)/2;
         int diam = width_da - pad*2;
 
-        context.set_source_rgb(0, 0, 0);
         context.set_line_width(2);
         context.set_line_join (Cairo.LineJoin.ROUND);
         context.rectangle(pad, pad, diam, diam);
         context.stroke();
         context.arc(center, center, diam/2, 0, 2*Math.PI);
-
         context.stroke();
-        //context.restore();
 
         return true;
     }
@@ -88,10 +81,7 @@ public class Utils : GLib.Object {
                 context.stroke();
             }
 
-            //stdout.printf("x: " + px.to_string() + "\n");
-            //stdout.printf("y: " + py.to_string() + "\n");
             pi = in_circle/num_points*8;
-            //stdout.printf("pi: " + pi.to_string() + "\n");
             pi_values += pi;
         }
 
