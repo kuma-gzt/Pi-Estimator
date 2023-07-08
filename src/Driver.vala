@@ -27,11 +27,12 @@ public class Driver : Gtk.Application {
     /* Override the 'activate' signal of GLib.Application,
 	 * which is inherited by Gtk.Application. */
 	protected override void activate() {
-		var window = new MainWindow(this);
+		var window = new Window(this);
         window.title = "Calculating Pi with MonteCarlo Simulation";
         window.border_width = 10;
         //window.set_default_size(1024, 768);
         window.window_position = Gtk.WindowPosition.CENTER;
+        window.set_resizable(false);
         window.show();
 	}
 
