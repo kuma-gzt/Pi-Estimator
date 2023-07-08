@@ -11,7 +11,7 @@ public class Window : Gtk.ApplicationWindow {
 	private Gtk.Button buttonAbout;
 	private Gtk.Separator separator;
 	private Gtk.DrawingArea drawing_area;
-	private Gtk.Statusbar statusBar;
+	private Gtk.Statusbar status_bar;
 	private string selection;
 
 	internal Window (Driver app) {
@@ -47,7 +47,7 @@ public class Window : Gtk.ApplicationWindow {
 
 		buttonAbout = new Gtk.Button();
 		buttonAbout.set_label("About");
-		//buttonAbout.clicked.connect(on_buttonabout_click);
+		buttonAbout.clicked.connect(on_buttonabout_click);
         grid.attach(buttonAbout, 4, 0, 1, 1);
 		buttonAbout.show ();
 
@@ -87,26 +87,55 @@ public class Window : Gtk.ApplicationWindow {
         grid.attach(separator, 0, 5, 5, 1);
         separator.show();
 
-        statusBar = new Gtk.Statusbar();
-        grid.attach(statusBar, 0, 6, 5, 1);
-		statusBar.show();
+        status_bar = new Gtk.Statusbar();
+        grid.attach(status_bar, 0, 6, 5, 1);
+		status_bar.show();
 
         grid.show();
 	}
 
 
 	private void on_buttondraw_click() {
+        DateTime begin = new DateTime.now();
+
+        int num_points = spin.get_value_as_int();
+        uint context_id = status_bar.get_context_id ("");
+        status_bar.push(context_id, @"Processing $num_points points...");
+
+        grid.remove(drawing_area);
         drawing_area = new Gtk.DrawingArea();
 		drawing_area.set_size_request(480, 480);
 		drawing_area.draw.connect((context) => {
-            int num_points = spin.get_value_as_int();
+            Utils.draw_shapes(context, 480, 20);
             double pi = Utils.draw_points(context, 480, 20, num_points);
-            epi_lbl_0.set_label(@"Pi: $pi");
+            var pi_string = "%.10f".printf(pi);
+            epi_lbl_0.set_label(@"Pi: " + pi_string);
             epi_lbl_1.set_label("(estimated)");
+            DateTime end = new DateTime.now();
+            int dif = (int)(end.to_unix() - begin.to_unix());
+            status_bar.push(context_id, @"Processing time: $dif seconds");
             return true;
 		});
 		grid.attach(drawing_area, 0, 2, 5, 1);
         drawing_area.show();
+	}
+
+	private void on_buttonabout_click() {
+		Gtk.AboutDialog dialog = new Gtk.AboutDialog();
+		dialog.set_destroy_with_parent(true);
+	    dialog.set_transient_for(this);
+	    dialog.set_modal(true);
+	    dialog.program_name = "MONTE CARLO PI ESTIMATOR";
+	    dialog.comments = "Estimating pi number with random points";
+	    dialog.copyright = "Copyright © 2023 Leo Guzman";
+	    dialog.version = "1.0";
+
+	    dialog.response.connect ((response_id) => {
+		    if (response_id == Gtk.ResponseType.CANCEL || response_id == Gtk.ResponseType.DELETE_EVENT) {
+			    dialog.hide_on_delete();
+		    }
+	    });
+	    dialog.present ();
 	}
 
 }
