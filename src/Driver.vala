@@ -19,7 +19,7 @@
  */
 
 /**
-* Yet another pi generator
+* Humble pi generator
 * @author Leo Guzman
 * @version 1.0
 */
@@ -30,7 +30,6 @@ public class Driver : Gtk.Application {
 		var window = new Window(this);
         window.title = "Calculating Pi with MonteCarlo Simulation";
         window.border_width = 10;
-        //window.set_default_size(1024, 768);
         window.window_position = Gtk.WindowPosition.CENTER;
         window.set_resizable(false);
         window.show();
@@ -42,7 +41,7 @@ public class Driver : Gtk.Application {
 }
 
 /**
-* Enry point
+* Entry point
 * @author Leo Guzman
 * @version 1.0
 */
