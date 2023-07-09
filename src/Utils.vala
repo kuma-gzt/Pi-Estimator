@@ -45,16 +45,17 @@ public class Utils : GLib.Object {
      * @author Leo Guzman
      * @version 1.0
      */
-    public static double draw_points(Cairo.Context context, int width_da, int pad, int num_points) {
+    public static double draw_points(Cairo.Context context, int width_da,
+                                     int pad, int num_points, int point_size) {
         int diam = width_da - pad*2;
         int px;
         int py;
 
-        double in_circle = 0.0;
         double pi;
         double[] pi_values = {};
+        double in_circle = 0.0;
 
-        context.set_line_width(2);
+        context.set_line_width(point_size);
         context.set_line_join(Cairo.LineJoin.ROUND);
         context.set_line_cap(Cairo.LineCap.ROUND);
 
@@ -80,11 +81,13 @@ public class Utils : GLib.Object {
                 context.close_path();
                 context.stroke();
             }
-
-            pi = in_circle/num_points*8;
-            pi_values += pi;
         }
+        pi = in_circle/num_points*4;
+        pi_values += pi;
 
-        return Gsl.Stats.mean(pi_values, 1, pi_values.length);
+        return pi;
+
+        // Keeping the function below in case Gsl will be needed in the future
+        //return Gsl.Stats.mean(pi_values, 1, pi_values.length);
     }
 }
