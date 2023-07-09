@@ -39,7 +39,7 @@ public class Utils : GLib.Object {
     }
 
     /**
-     * Draw points
+     * Draw points and calculate value of pi
      * @parameter Cairo context
      * @return pi value
      * @author Leo Guzman
