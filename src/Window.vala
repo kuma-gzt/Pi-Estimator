@@ -17,6 +17,8 @@ public class Window : Gtk.ApplicationWindow {
 	private Gtk.Separator separator;
 	private Gtk.DrawingArea drawing_area;
 	private Gtk.Statusbar status_bar;
+    private int width_da = 480; // width drawing area in pixels, no need to specify height as it is a square
+    private int pad = 20; //padding in pixels
 
 	internal Window (Driver app) {
 		Object (application: app);
@@ -60,9 +62,9 @@ public class Window : Gtk.ApplicationWindow {
         separator.show();
 
         drawing_area = new Gtk.DrawingArea();
-		drawing_area.set_size_request(480, 480);
+		drawing_area.set_size_request(width_da, width_da);
 		drawing_area.draw.connect((context) => {
-            return Utils.draw_shapes(context, 480, 20);
+            return Utils.draw_shapes(context, width_da, pad);
 		});
 		grid.attach(drawing_area, 0, 2, 5, 1);
 		drawing_area.show();
@@ -133,13 +135,13 @@ public class Window : Gtk.ApplicationWindow {
 
         grid.remove(drawing_area);
         drawing_area = new Gtk.DrawingArea();
-		drawing_area.set_size_request(480, 480);
+		drawing_area.set_size_request(width_da, width_da);
 		drawing_area.draw.connect((context) => {
-            Utils.draw_shapes(context, 480, 20);
-            double pi = Utils.draw_points(context, 480, 20, num_points, point_size);
+            Utils.draw_shapes(context, width_da, pad);
+            double pi = Utils.draw_points(context, width_da, pad, num_points, point_size);
             var pi_string = "%.10f".printf(pi);
             epi_lbl_0.set_label(@"Pi: " + pi_string);
-            epi_lbl_1.set_label("(estimated)");
+            epi_lbl_1.set_label("(estimated value)");
             DateTime end = new DateTime.now();
             int dif = (int)(end.to_unix() - begin.to_unix());
             status_bar.push(context_id, @"Processing time: $dif seconds");
@@ -148,7 +150,6 @@ public class Window : Gtk.ApplicationWindow {
 		grid.attach(drawing_area, 0, 2, 5, 1);
         drawing_area.show();
 	}
-
 
     /**
      * About button
