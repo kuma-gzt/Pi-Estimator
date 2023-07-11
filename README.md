@@ -1,5 +1,6 @@
 # Pi Estimator
 Yet another pi estimator by Monte Carlo methods
+
 ![Alt Text](./assets/pi_estimator.gif)
 
 ## Dependencies
