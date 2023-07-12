@@ -36,7 +36,7 @@ public class Window : Gtk.ApplicationWindow {
         combo_box.show();
         grid.attach(combo_box, 0, 0, 1, 1);
 
-		numpoints_lbl = new Gtk.Label("Number points:");
+		numpoints_lbl = new Gtk.Label("Number dots:");
 		grid.attach(numpoints_lbl, 1, 0, 1, 1);
 		numpoints_lbl.show();
 
